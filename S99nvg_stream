@@ -1,0 +1,43 @@
+#!/bin/sh
+case "$1" in
+  start)
+    echo "Starting LARP NVG Streaming Pipeline..."
+    # 1. Clear out conflicting legacy camera operations
+    killall -9 rkipc 2>/dev/null
+    killall -9 python3 2>/dev/null
+    killall -9 v4l2-ctl 2>/dev/null
+    sleep 0.5
+
+    # 2. Dynamically locate the SC3336 sensor subdev interface
+    SENSOR_NODE=$(grep -l "sc3336" /sys/class/video4linux/v4l-subdev*/name | head -n 1 | awk -F/ '{print "/dev/"$5}')
+
+    if [ -z "$SENSOR_NODE" ]; then
+        # Fallback tracking if node lookup yields null values
+        SENSOR_NODE="/dev/v4l-subdev0"
+    fi
+
+    # 3. Inject hardware register light-amplification overrides to the SC3336 chip
+    v4l2-ctl -d $SENSOR_NODE --set-ctrl=analogue_gain=255 2>/dev/null
+    v4l2-ctl -d $SENSOR_NODE --set-ctrl=gain=255 2>/dev/null
+    v4l2-ctl -d $SENSOR_NODE --set-ctrl=exposure=2048 2>/dev/null
+    v4l2-ctl -d $SENSOR_NODE --set-ctrl=coarse_integration_time=2048 2>/dev/null
+
+    # 4. Launch your high-speed direct python memory stream loop in the background
+    python3 /userdata/live_camera.py &
+    ;;
+  stop)
+    echo "Stopping LARP NVG Pipeline..."
+    killall -9 python3 2>/dev/null
+    killall -9 v4l2-ctl 2>/dev/null
+    ;;
+  restart)
+    $0 stop
+    sleep 0.5
+    $0 start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+exit 0
