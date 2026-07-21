@@ -11,3 +11,14 @@ reads 1:1 frames straight from the camera, applies a non-linear night vision gam
 
 S99nvg_stream
 startup script, forces the sensor's analog light amplifier gains to maximum, and triggers the main script
+
+
+#pin out
+
+VCC -> 3v3_out
+GND -> GND
+DIN -> 1c2_d
+CLK -> 1c1_d
+CS -> 1c0_d
+DC -> 1d1_d
+RST -> 1d0_d
