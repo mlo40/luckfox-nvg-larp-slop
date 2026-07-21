@@ -3,21 +3,21 @@ garbo nvgs made with a luckfox pico plus, streams camera to SPI 240x280 ST7789V2
 
 its slop because i was to lazy to code it my self
 
-#Installation location
+# Installation location
 /etc/init.d/S99nvg_stream
 /userdata/live_camera.py
 
-#Post-Installation
+# Post-Installation
 chmod +x /userdata/live_camera.py
 chmod +x /etc/init.d/S99nvg_stream
 
-#live_camera.py
+# live_camera.py
 reads 1:1 frames straight from the camera, applies a non-linear night vision gamma enhancement curve, maps the pixels into a true grayscale configuration, and flushes the data down the SPI bus
 
-#S99nvg_stream
+# S99nvg_stream
 startup script, forces the sensor's analog light amplifier gains to maximum, and triggers the main script
 
-#pin out
+# pin out
 
 VCC -> 3v3_out
 GND -> GND
