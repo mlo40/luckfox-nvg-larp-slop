@@ -42,7 +42,7 @@ write_cmd(0x01); time.sleep(0.05) # Reset
 write_cmd(0x11); time.sleep(0.05) # Wake
 
 # Configure verified un-mirrored layout parameters
-write_cmd(0x36); write_data(b'\x40')
+write_cmd(0x36); write_data(b'\x00')
 write_cmd(0x21)                                  # Hardware Color Inversion ON
 write_cmd(0x3A); write_data(b'\x05')             # 16-bit RGB565 Layout
 
